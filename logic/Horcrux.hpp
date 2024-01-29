@@ -27,7 +27,7 @@ namespace Client {
 class ChecksumInterface // (very) stub code
 {
 public:
-    std::string getChecksum(const std::string&) { return ""; }
+    virtual std::string getChecksum(const std::string&) { return ""; }
 };
 
 class FileSplitter

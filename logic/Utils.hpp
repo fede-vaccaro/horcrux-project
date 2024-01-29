@@ -16,6 +16,25 @@
 
 namespace Horcrux::Utils {
 
+template <typename HEADER>
+std::array<char, sizeof(HEADER)> serializeHeader(const HEADER& header)
+{
+    const auto* beginPtr = reinterpret_cast<const char*>(&header);
+    const auto* endPtr = beginPtr + sizeof(HEADER);
+    std::array<char, sizeof(HEADER)> serialized;
+    std::copy(beginPtr, endPtr, serialized.data());
+    return serialized;
+}
+
+template <typename HEADER>
+HEADER deserializeHeader(const std::array<char, sizeof(HEADER)>& binaries)
+{
+    HEADER header;
+    auto* destPtr = reinterpret_cast<char*>(&header);
+    std::copy(binaries.begin(), binaries.end(), destPtr);
+    return header;
+}
+
 template <typename... Args>
 void log(const Args&... args)
 {

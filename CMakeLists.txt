@@ -13,9 +13,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-
 include_directories(asio/include logic networking)
-
 
 set(COMMON
         logic/Horcrux.hpp
@@ -25,17 +23,18 @@ set(COMMON
         networking/Requests.hpp
 )
 
-add_executable(horcrux main.cpp ${COMMON})
+add_executable(horcrux client.cpp ${COMMON})
 add_executable(server server.cpp ${COMMON})
 
 add_executable(
-        hello_test
-        test/CoreLogicTests.cc
+        tests
         ${COMMON}
+        test/CoreLogicTests.cpp
+        test/NetworkingHelpersTest.cpp
 )
 
 target_link_libraries(
-        hello_test
+        tests
         GTest::gtest_main
 )
 

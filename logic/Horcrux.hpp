@@ -24,10 +24,10 @@ struct Horcrux
 
 namespace Client {
 
-class ChecksumInterface
+class ChecksumInterface // (very) stub code
 {
 public:
-    std::string getChecksum(const std::string& binaries) { return ""; }
+    std::string getChecksum(const std::string&) { return ""; }
 };
 
 class FileSplitter
@@ -48,7 +48,7 @@ public:
     std::string join(const std::vector<Horcrux>& horcrux) override;
 
 private:
-    std::unique_ptr<ChecksumInterface> mChecksumMethod = std::make_unique<ChecksumInterface>(); // stub code
+    std::unique_ptr<ChecksumInterface> mChecksumMethod = std::make_unique<ChecksumInterface>(); // might be better to inject method from external
     uint32_t mNumSplits;
 };
 

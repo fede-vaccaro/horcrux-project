@@ -19,11 +19,7 @@ struct PreRequestHeader
 
     static PreRequestHeader fromHorcruxes(uint64_t uuid, const std::vector<Horcrux>& horcruxes)
     {
-        PreRequestHeader header;
-
-        header.mUuid = uuid;
-        header.mNumHorcruxes = horcruxes.size();
-        header.mTotalSize = 0;
+        PreRequestHeader header{ uuid, 0, static_cast<uint32_t>(horcruxes.size()) };
 
         for (const auto& hcx : horcruxes)
             header.mTotalSize += hcx.mContent.size();
@@ -40,7 +36,6 @@ struct Request
         FAILURE = 1
     };
 
-    // it has fixed size
     struct RequestHeader
     {
         uint64_t mUuid{};         // reference file uuid
@@ -49,7 +44,10 @@ struct Request
         uint32_t mChecksumSize{}; // checksum size in bytes
     };
 
+    // the request header is sent first, to let the server to properly allocate the buffer and to know when to stop reading etc.
     RequestHeader mHeader{};
+
+    // then the actual 'payload' is sent
     std::string mContent{};
     std::string mChecksum{};
 
@@ -60,9 +58,7 @@ struct Request
         for (auto& hcx : horcruxes)
         {
             Request request;
-            request.mHeader.mUuid = uuid;
-            request.mHeader.mIndex = requests.size();
-            request.mHeader.mContentSize = hcx.mContent.size();
+            request.mHeader = RequestHeader{ uuid, static_cast<uint32_t>(requests.size()), static_cast<uint32_t>(hcx.mContent.size()) };
             request.mContent = std::move(hcx.mContent);
             request.mChecksum = std::move(hcx.mChecksum);
             requests.emplace_back(request);

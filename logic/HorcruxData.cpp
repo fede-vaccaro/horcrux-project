@@ -1,13 +1,13 @@
 //
 // Created by federico on 1/28/24.
 //
-#include "Horcrux.hpp"
+#include "HorcruxData.hpp"
 
 #include <iterator>
 #include <ranges>
 
 namespace Horcrux::Client {
-std::vector<Horcrux> BasicFileSplitter::split(const std::string& binaryData)
+std::vector<HorcruxData> BasicFileSplitter::split(const std::string& binaryData)
 {
     if (mNumSplits == 0)
     {
@@ -21,7 +21,7 @@ std::vector<Horcrux> BasicFileSplitter::split(const std::string& binaryData)
         return {};
     }
 
-    std::vector<Horcrux> horcruxes;
+    std::vector<HorcruxData> horcruxes;
     horcruxes.reserve(mNumSplits);
 
     // actual computation
@@ -34,13 +34,13 @@ std::vector<Horcrux> BasicFileSplitter::split(const std::string& binaryData)
 
             std::string horcruxContent(beginIt, endIt);
             std::string checksum = mChecksumMethod->getChecksum(horcruxContent);
-            Horcrux horcrux{ std::move(horcruxContent), std::move(checksum) };
+            HorcruxData horcrux{ std::move(horcruxContent), std::move(checksum) };
             horcruxes.emplace_back(horcrux);
         }
     }
     return horcruxes;
 }
-std::string BasicFileSplitter::join(const std::vector<Horcrux>& horcrux)
+std::string BasicFileSplitter::join(const std::vector<HorcruxData>& horcrux)
 {
     std::string joinedHorcrux;
 

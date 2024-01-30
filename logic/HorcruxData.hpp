@@ -2,8 +2,8 @@
 // Created by federico on 1/28/24.
 //
 
-#ifndef HORCRUX_LOGIC_HORCRUX_HPP_
-#define HORCRUX_LOGIC_HORCRUX_HPP_
+#ifndef HORCRUX_LOGIC_HORCRUXDATA_HPP_
+#define HORCRUX_LOGIC_HORCRUXDATA_HPP_
 
 #include "Utils.hpp"
 
@@ -16,7 +16,7 @@
 
 namespace Horcrux {
 
-struct Horcrux
+struct HorcruxData
 {
     std::string mContent;
     std::string mChecksum;
@@ -33,8 +33,8 @@ public:
 class FileSplitter
 {
 public:
-    virtual std::vector<Horcrux> split(const std::string& binaryData) = 0;
-    virtual std::string join(const std::vector<Horcrux>& horcrux) = 0;
+    virtual std::vector<HorcruxData> split(const std::string& binaryData) = 0;
+    virtual std::string join(const std::vector<HorcruxData>& horcrux) = 0;
     virtual ~FileSplitter() = default;
 };
 
@@ -43,9 +43,9 @@ class BasicFileSplitter : public FileSplitter
 public:
     explicit BasicFileSplitter(uint32_t numSplits) : mNumSplits(numSplits) {}
 
-    std::vector<Horcrux> split(const std::string& binaryData) override;
+    std::vector<HorcruxData> split(const std::string& binaryData) override;
 
-    std::string join(const std::vector<Horcrux>& horcrux) override;
+    std::string join(const std::vector<HorcruxData>& horcrux) override;
 
 private:
     std::unique_ptr<ChecksumInterface> mChecksumMethod = std::make_unique<ChecksumInterface>(); // might be better to inject method from external
@@ -55,4 +55,4 @@ private:
 } // namespace Client
 }; // namespace Horcrux
 
-#endif // HORCRUX_LOGIC_HORCRUX_HPP_
+#endif // HORCRUX_LOGIC_HORCRUXDATA_HPP_

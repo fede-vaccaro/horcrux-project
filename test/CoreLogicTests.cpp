@@ -1,4 +1,4 @@
-#include "../logic/Horcrux.hpp"
+#include "../logic/HorcruxData.hpp"
 
 #include <gtest/gtest.h>
 
@@ -18,7 +18,7 @@ TEST_F(BasicFileSplitterTest, TestZeroSplitsFails)
     uint32_t nSplits = 0;
     Client::BasicFileSplitter fileSplitter{ nSplits };
 
-    std::vector<Horcrux> splits = fileSplitter.split(binaryData);
+    std::vector<HorcruxData> splits = fileSplitter.split(binaryData);
 
     EXPECT_TRUE(splits.empty());
 }
@@ -30,7 +30,7 @@ TEST_F(BasicFileSplitterTest, MoreSplitsThanBytesFails)
     uint32_t nSplits = binaryData.size() + 1;
     Client::BasicFileSplitter fileSplitter{ nSplits };
 
-    std::vector<Horcrux> splits = fileSplitter.split(binaryData);
+    std::vector<HorcruxData> splits = fileSplitter.split(binaryData);
 
     EXPECT_TRUE(splits.empty());
 }
@@ -42,7 +42,7 @@ TEST_F(BasicFileSplitterTest, TestSplitOk)
     uint32_t nSplits = 4;
     Client::BasicFileSplitter fileSplitter{ nSplits };
 
-    std::vector<Horcrux> splits = fileSplitter.split(binaryData);
+    std::vector<HorcruxData> splits = fileSplitter.split(binaryData);
 
     ASSERT_EQ(splits.size(), nSplits);
 
@@ -59,7 +59,7 @@ TEST_F(BasicFileSplitterTest, TestSplitOkButNumberOfBytesIsNotDivisibleByNumSpli
     uint32_t nSplits = 4;
     Client::BasicFileSplitter fileSplitter{ nSplits };
 
-    std::vector<Horcrux> splits = fileSplitter.split(binaryData);
+    std::vector<HorcruxData> splits = fileSplitter.split(binaryData);
 
     ASSERT_EQ(splits.size(), nSplits);
 
@@ -73,7 +73,7 @@ TEST_F(BasicFileSplitterTest, TestJoin)
 {
     const std::string expectedBinaryData = "AABBCCDD";
 
-    std::vector<Horcrux> input = { { "AA", "" }, { "BB", "" }, { "CC", "" }, { "DD", "" } };
+    std::vector<HorcruxData> input = { { "AA", "" }, { "BB", "" }, { "CC", "" }, { "DD", "" } };
     Client::BasicFileSplitter fileSplitter{ 0 }; // numSplit == input.size() is not checked
 
     std::string joined = fileSplitter.join(input);
@@ -91,7 +91,7 @@ TEST(HorcruxTestE2E, EndToEndOk)
     // split binaries
     uint32_t numSplits = 10;
     Horcrux::Client::BasicFileSplitter splitter(numSplits);
-    std::vector<Horcrux::Horcrux> horcruxes = splitter.split(fileBinariesInput);
+    std::vector<Horcrux::HorcruxData> horcruxes = splitter.split(fileBinariesInput);
 
     uint32_t hcxCount = 0;
     for (const auto& hcx : horcruxes)
@@ -105,7 +105,7 @@ TEST(HorcruxTestE2E, EndToEndOk)
     }
 
     // reload horcruxes
-    std::vector<Horcrux::Horcrux> reloadedHorcruxes;
+    std::vector<Horcrux::HorcruxData> reloadedHorcruxes;
 
     for (uint32_t idx = 0; idx < hcxCount; idx++)
     {
@@ -113,7 +113,7 @@ TEST(HorcruxTestE2E, EndToEndOk)
         std::filesystem::path destPath = resourceDirectory / (std::to_string(fileUuid) + ".hcx." + std::to_string(idx));
         std::string hcxBinaries = Horcrux::Utils::loadFile(destPath).value_or("");
         ASSERT_FALSE(hcxBinaries.empty());
-        reloadedHorcruxes.emplace_back(Horcrux::Horcrux{ std::move(hcxBinaries), "" });
+        reloadedHorcruxes.emplace_back(Horcrux::HorcruxData{ std::move(hcxBinaries), "" });
     }
 
     std::string rejoinedBinaries = splitter.join(reloadedHorcruxes);

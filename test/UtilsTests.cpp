@@ -2,7 +2,7 @@
 // Created by federico on 1/30/24.
 //
 
-#include "../logic/Horcrux.hpp"
+#include "../logic/HorcruxData.hpp"
 
 #include <gtest/gtest.h>
 

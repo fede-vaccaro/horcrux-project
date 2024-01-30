@@ -16,15 +16,20 @@ FetchContent_MakeAvailable(googletest)
 include_directories(asio/include logic networking)
 
 set(COMMON
-        logic/Horcrux.hpp
-        logic/Horcrux.cpp
+        logic/HorcruxData.hpp
+        logic/HorcruxData.cpp
         logic/Utils.cpp
         logic/Utils.hpp
         networking/Requests.hpp
+        networking/Requests.cpp
+        networking/TcpConnection.cpp
+        networking/TcpConnection.hpp
+        networking/TcpServer.cpp
+        networking/TcpServer.hpp
 )
 
-add_executable(horcrux client.cpp ${COMMON}
-        test/UtilsTests.cpp)
+add_executable(horcrux client.cpp ${COMMON})
+
 add_executable(server server.cpp ${COMMON})
 
 add_executable(

@@ -10,8 +10,8 @@ using namespace Horcrux;
 int main()
 {
     auto dirPath = std::filesystem::path{ "out" };
-    const uint32_t numHcxs = 10;
-    const uint64_t uuid = 1200;
+    const uint32_t numHcxs = 4;
+    const uint64_t uuid = 17240256471984258206;
 
     auto getFileName = [](uint64_t uuid, int32_t index) { return std::to_string(uuid) + ".hcx." + std::to_string(index); };
 

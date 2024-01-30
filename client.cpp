@@ -8,7 +8,7 @@
 using asio::ip::tcp;
 using namespace Horcrux;
 
-std::vector<HorcruxData> getSampleHorcrux(const std::string& path, Horcrux::Client::FileSplitter* splitter)
+std::vector<HorcruxData> getHorcruxes(const std::string& path, Horcrux::Client::FileSplitter* splitter)
 {
     auto binaries = Utils::loadFile(path);
     if (binaries.has_value())
@@ -83,12 +83,13 @@ int main(int argc, char** argv)
         asio::connect(socket, endpoints);
 
         std::unique_ptr<Horcrux::Client::FileSplitter> splitter = std::make_unique<Client::BasicFileSplitter>(options->mHorcruxCount);
-        std::vector<HorcruxData> horcruxes = getSampleHorcrux(options->mInputPath, splitter.get());
+        std::vector<HorcruxData> horcruxes = getHorcruxes(options->mInputPath, splitter.get());
 
         if (horcruxes.empty())
             return -1; // check log
 
         Save::PreRequestHeader preRequestHeader = Save::PreRequestHeader::fromHorcruxes(Utils::generateRandomUint64(), horcruxes);
+        Utils::log("The file will be saved with UUID: ", preRequestHeader.mUuid);
         auto serializedPreRequestHeader = Utils::serializeHeader(preRequestHeader);
 
         std::error_code ec;

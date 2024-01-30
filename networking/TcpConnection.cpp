@@ -25,17 +25,6 @@ bool TcpConnection::saveHorcruxes()
 
 bool TcpConnection::checkPreRequestHeader() const
 {
-    std::regex regexPattern(R"(\d+\.hcx\.\d+)");
-
-    for (const auto& entry : std::filesystem::directory_iterator(kOutPath))
-    {
-        if (std::filesystem::is_regular_file(entry.path()) && std::regex_match(entry.path().filename().string(), regexPattern))
-        {
-            Utils::log("The client is requesting to push a file with an already present UUID: ", mPreRequestHeader.mUuid);
-            return false;
-        }
-    }
-
     if (mPreRequestHeader.mNumHorcruxes > mConfig.mMaxNumHorcruxAccepted)
     {
         Utils::log("The client is requesting to save too many Horcrux for the file. Maximum number of Horcruxes: ", mConfig.mMaxNumHorcruxAccepted);

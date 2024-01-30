@@ -68,18 +68,18 @@ std::optional<ClientSaveOptions> parseHorcruxCommand(int argc, char* argv[])
 
     if (argc != 5)
     {
-        std::cerr << "Usage: horcrux save -n <horcrux count> <input path>" << std::endl;
+        std::cerr << "Usage: ./horcrux save -n <horcrux count> <input path>" << std::endl;
         return {};
     }
 
-    std::string command = argv[0];
+    std::string command = argv[1];
     if (command != "save")
     {
         std::cerr << "Invalid command. Use 'save' or 'load' ('load' mode is not available)." << std::endl;
         return {};
     }
 
-    std::string option = argv[1];
+    std::string option = argv[2];
     if (option != "-n")
     {
         std::cerr << "Invalid option. Use '-n'." << std::endl;
@@ -88,7 +88,7 @@ std::optional<ClientSaveOptions> parseHorcruxCommand(int argc, char* argv[])
 
     try
     {
-        opt.mHorcruxCount = std::stoi(argv[2]);
+        opt.mHorcruxCount = std::stoi(argv[3]);
     } catch (const std::invalid_argument& e)
     {
         std::cerr << "Invalid horcrux count. Please provide a valid integer." << std::endl;

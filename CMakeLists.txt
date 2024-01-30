@@ -23,14 +23,16 @@ set(COMMON
         networking/Requests.hpp
 )
 
-add_executable(horcrux client.cpp ${COMMON})
+add_executable(horcrux client.cpp ${COMMON}
+        test/UtilsTests.cpp)
 add_executable(server server.cpp ${COMMON})
 
 add_executable(
         tests
         ${COMMON}
         test/CoreLogicTests.cpp
-        test/NetworkingHelpersTest.cpp
+        test/NetworkingHelpersTests.cpp
+        test/UtilsTests.cpp
 )
 
 target_link_libraries(

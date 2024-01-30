@@ -4,25 +4,6 @@
 
 const std::filesystem::path resourceDirectory{ "../test/resource/" };
 
-TEST(IOStorageTest, TestLoadAndSaveFile)
-{
-    // clean-up from previous execution, if any
-    const std::filesystem::path outFilePath = resourceDirectory / "harrypotter_copy.png";
-
-    if (exists(outFilePath))
-        remove(outFilePath);
-
-    // a bit quick and dirty...
-    // ideally should test the methods separately and restrict every test to one case but... i'm very short on time.
-    std::string fileBinaries = Horcrux::Utils::loadFile(resourceDirectory / "harrypotter.png").value_or("");
-    EXPECT_NE(fileBinaries.size(), 0);
-
-    // i also checked manually if the image is ok :)
-    Horcrux::Utils::saveFile(fileBinaries, outFilePath);
-    EXPECT_TRUE(exists(outFilePath));
-    EXPECT_EQ(file_size(resourceDirectory / "harrypotter.png"), file_size(outFilePath));
-}
-
 namespace Horcrux {
 
 // Useful for launching all the tests together from the IDE
@@ -93,7 +74,7 @@ TEST_F(BasicFileSplitterTest, TestJoin)
     const std::string expectedBinaryData = "AABBCCDD";
 
     std::vector<Horcrux> input = { { "AA", "" }, { "BB", "" }, { "CC", "" }, { "DD", "" } };
-    Client::BasicFileSplitter fileSplitter{ 0 }; // numSplit == input.size() is not tested
+    Client::BasicFileSplitter fileSplitter{ 0 }; // numSplit == input.size() is not checked
 
     std::string joined = fileSplitter.join(input);
     EXPECT_EQ(joined, expectedBinaryData);

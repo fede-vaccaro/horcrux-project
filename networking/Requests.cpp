@@ -18,7 +18,7 @@ std::ostream& operator<<(std::ostream& os, const Request::Header& header)
     os << "UUID: " << header.mUuid << ", "
        << "INDEX: " << header.mIndex << ", "
        << "SIZE: " << header.mContentSize << ", "
-       << ":CHECKSUM_SIZE: " << header.mChecksumSize;
+       << "CHECKSUM_SIZE: " << header.mChecksumSize;
     return os;
 }
 

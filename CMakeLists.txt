@@ -32,6 +32,8 @@ add_executable(horcrux client.cpp ${COMMON})
 
 add_executable(server server.cpp ${COMMON})
 
+add_executable(join join.cpp ${COMMON})
+
 add_executable(
         tests
         ${COMMON}

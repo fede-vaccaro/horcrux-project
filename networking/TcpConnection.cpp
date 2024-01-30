@@ -6,24 +6,36 @@
 
 #include "Utils.hpp"
 
+#include <regex>
+
 namespace Horcrux {
 
 bool TcpConnection::saveHorcruxes()
 {
-    // stub
-    Utils::log("Number of received HCX: ", mCurrentRequestHorcruxes.size());
+    Utils::log("Total number of received Horcruxes: ", mCurrentRequestHorcruxes.size());
+    uint32_t counter = 0;
     for (const std::optional<HorcruxData>& hcx : mCurrentRequestHorcruxes)
     {
-        if (hcx.has_value())
-            std::cout << hcx.value().mContent;
-        else
-            Utils::log("horcrux missing!");
+        std::filesystem::path horcruxPath{ std::to_string(mPreRequestHeader.mUuid) + ".hcx." + std::to_string(counter) };
+        Utils::saveFile(hcx->mContent, kOutPath / horcruxPath);
+        counter++;
     }
     return true;
 }
 
 bool TcpConnection::checkPreRequestHeader() const
 {
+    std::regex regexPattern(R"(\d+\.hcx\.\d+)");
+
+    for (const auto& entry : std::filesystem::directory_iterator(kOutPath))
+    {
+        if (std::filesystem::is_regular_file(entry.path()) && std::regex_match(entry.path().filename().string(), regexPattern))
+        {
+            Utils::log("The client is requesting to push a file with an already present UUID: ", mPreRequestHeader.mUuid);
+            return false;
+        }
+    }
+
     if (mPreRequestHeader.mNumHorcruxes > mConfig.mMaxNumHorcruxAccepted)
     {
         Utils::log("The client is requesting to save too many Horcrux for the file. Maximum number of Horcruxes: ", mConfig.mMaxNumHorcruxAccepted);
@@ -136,7 +148,7 @@ void TcpConnection::writeHandler(const asio::error_code& ec, size_t byteTransfer
 {
     if (!ec)
     {
-        Utils::log("Ok, transferred ", byteTransferred, " bytes");
+        Utils::log("Ok, sent ", byteTransferred, " bytes");
         return;
     }
     Utils::log("Something went wrong ", ec.message());

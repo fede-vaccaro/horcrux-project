@@ -49,5 +49,15 @@ std::optional<std::string> loadFile(const std::filesystem::path& path);
 
 bool saveFile(const std::string& binary, const std::filesystem::path& path);
 
+struct ClientSaveOptions
+{
+    uint32_t mHorcruxCount;
+    std::string mInputPath;
+};
+
+std::optional<ClientSaveOptions> parseHorcruxCommand(int argc, char* argv[]);
+
+uint64_t generateRandomUint64();
+
 } // namespace Horcrux::Utils
 #endif // HORCRUX_LOGIC_UTILS_HPP_

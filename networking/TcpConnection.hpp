@@ -18,8 +18,8 @@ class TcpConnection : public std::enable_shared_from_this<TcpConnection>
 public:
     struct Config
     {
-        uint64_t mMaxNumHorcruxAccepted = 20;   //  if the client requests to save too many horcruxes, the entire request is rejected
-        uint64_t mMaxTotalSizeAccepted = 10000; // if an horcrux goes over this size, the entire request is rejected
+        uint64_t mMaxNumHorcruxAccepted = 20;  //  if the client requests to save too many horcruxes, the entire request is rejected
+        uint64_t mMaxTotalSizeAccepted = 10e6; // if a horcrux goes over this size, the entire request is rejected
     };
 
     using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
@@ -67,18 +67,22 @@ private:
     // networking stuff
     tcp::socket mTcpSocket;
 
-    // data buffers
+    // pre request buffer and cached deserialized version
     std::array<char, sizeof(Save::PreRequestHeader)> mPreRequestHeaderBuffer{};
     Save::PreRequestHeader mPreRequestHeader{};
 
+    // content header buffer and cached deserialized version
     std::array<char, sizeof(Save::Request::Header)> mRequestHeaderBuffer{};
     Save::Request::Header mRequestHeader{};
 
+    // for arbitrary messages i/o
     std::string mMessageBuffer{};
 
     // Here is where the server is going to store the received Horcruxes
     // std::optional help checking the sanity of the client's data
     std::vector<std::optional<HorcruxData>> mCurrentRequestHorcruxes;
+
+    const std::filesystem::path kOutPath{ "out" };
 };
 } // namespace Horcrux
 

@@ -68,6 +68,9 @@ bool sendHorcruxRequest(tcp::socket& socket, const Save::Request& request)
     return true;
 }
 
+const std::string kPort = "8383";
+const std::string kIp = "127.0.01";
+
 int main(int argc, char** argv)
 {
     std::optional<Utils::ClientSaveOptions> options = Utils::parseHorcruxCommand(argc, argv);
@@ -78,7 +81,7 @@ int main(int argc, char** argv)
     {
         asio::io_context io_context;
         tcp::resolver resolver(io_context);
-        tcp::resolver::results_type endpoints = resolver.resolve("127.0.0.1", std::to_string(8080));
+        tcp::resolver::results_type endpoints = resolver.resolve(kIp, kPort);
         tcp::socket socket(io_context);
         asio::connect(socket, endpoints);
 

@@ -18,7 +18,7 @@ namespace Horcrux {
 class TcpServer
 {
 public:
-    static constexpr uint32_t kServerPort = 8080;
+    static constexpr uint32_t kServerPort = 8383;
 
     TcpServer(asio::io_context& ioContext) : mIoContext(ioContext), mTcpAcceptor(ioContext, tcp::endpoint(tcp::v4(), kServerPort)) { startAccept(); }
 
